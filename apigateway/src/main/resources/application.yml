@@ -1,0 +1,24 @@
+server:
+  port: 9000
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        #Route Mapping for Profile Service
+        - id: profileMicroService             #RouteIdentifier
+          uri: http://localhost:9001/         #Respective microservice URL which needs to be mapped
+          predicates:
+            - Path=/api/profile/**
+
+          #Route Mapping for Stream Service
+        - id: streamMicroService
+          uri: http://localhost:9002/
+          predicates:
+            - Path=/api/stream/**
+
+          #Route Mapping for Stat Service
+        - id: statMicroservice
+          uri: http://localhost:9003/
+          predicates:
+            - Path=/api/stat/**
