@@ -1,2 +1,4 @@
 server:
   port: 9002
+datasource:
+  path: "D:\\projects\\upwork\\Akshay Jadhav\\microservices-twitter\\db\\"

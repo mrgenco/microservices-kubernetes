@@ -5,7 +5,7 @@ spring:
   cloud:
     gateway:
       routes:
-        #Route Mapping for Profile Service
+          #Route Mapping for Profile Service
         - id: profileMicroService             #RouteIdentifier
           uri: http://localhost:9001/         #Respective microservice URL which needs to be mapped
           predicates:

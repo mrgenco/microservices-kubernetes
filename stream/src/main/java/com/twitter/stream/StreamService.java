@@ -1,62 +1,84 @@
 package com.twitter.stream;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-@RestController
-@RequestMapping("/api/stream")
+@Service
 public class StreamService {
 
-    private List<Tweet> tweetList = new ArrayList<>();
+    // constant variables for streams data
+    private static final String STREAMS = "streams";
+    private static final String ID = "ID:";
+    private static final String USERID = "USERID:";
+    private static final String TWEETBODY = "TWEETBODY:";
+    private static final String TWEETDATE = "TWEETDATE:";
 
-    @PostConstruct
-    public void createInitialData(){
-        Tweet newTweet1 = new Tweet();
-        newTweet1.setId((long) 1);
-        newTweet1.setUserId((long) 1);
-        newTweet1.setTweetbody("This is an example tweet 1");
-        newTweet1.setTweetDate(new Date());
+    // datasource destination as environment variables
+    @Value("${datasource.path}")
+    private String dataSourcePath;
 
-        Tweet newTweet2 = new Tweet();
-        newTweet2.setId((long) 2);
-        newTweet2.setUserId((long) 1);
-        newTweet2.setTweetbody("This is an example tweet 2");
-        newTweet2.setTweetDate(new Date());
+    Tweet createStream(Tweet tweet) throws IOException {
+        StringBuffer inputBuffer = new StringBuffer();
+        inputBuffer.append(USERID).append(tweet.getUserId());
+        inputBuffer.append('\n');
+        tweet.setId(UUID.randomUUID());
+        inputBuffer.append(ID).append(tweet.getId());
+        inputBuffer.append('\n');
+        inputBuffer.append(TWEETBODY).append(tweet.getTweetbody());
+        inputBuffer.append('\n');
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
+        Date newDate = new Date();
+        String tweetDate = sdf.format(newDate);
+        tweet.setTweetDate(newDate);
+        inputBuffer.append(TWEETDATE).append(tweetDate);
+        inputBuffer.append('\n');
+        inputBuffer.append("-----------------------------");
+        inputBuffer.append('\n');
+        // append new tweet to streams file
+        FileOutputStream fileOut = new FileOutputStream(dataSourcePath + STREAMS, true);
+        fileOut.write(inputBuffer.toString().getBytes(), 0, inputBuffer.toString().length());
+        fileOut.close();
 
-        Tweet newTweet3 = new Tweet();
-        newTweet3.setId((long) 3);
-        newTweet3.setUserId((long) 1);
-        newTweet3.setTweetbody("This is an example tweet 3");
-        newTweet3.setTweetDate(new Date());
+        return tweet;
 
-        tweetList.add(newTweet1);
-        tweetList.add(newTweet2);
-        tweetList.add(newTweet3);
     }
 
-    @GetMapping("/all/")
-    public List<Tweet> findAll() {
-
+    List<Tweet> findAllByUserId(Long userid) throws Exception {
+        List<Tweet> tweetList = new ArrayList<>();
+        File file = new File(dataSourcePath + STREAMS);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+        Tweet tweet = null;
+        Long currentUserId = null;
+        while ((line = br.readLine()) != null){
+            if(line.startsWith(USERID)){ // new tweet of given user found
+                tweet = new Tweet();
+                currentUserId = Long.parseLong(line.substring(line.lastIndexOf(ID) + 3));
+                if(currentUserId == userid){
+                    tweet.setUserId(currentUserId);
+                    tweetList.add(tweet);
+                }
+            }
+            if(currentUserId == userid){
+                if(line.startsWith(ID))
+                    tweet.setId(UUID.fromString(line.substring(line.lastIndexOf(ID) + 3)));
+                else if(line.startsWith(TWEETBODY))
+                    tweet.setTweetbody(line.substring(line.lastIndexOf(TWEETBODY) + 10));
+                else if(line.startsWith(TWEETDATE)){
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
+                    Date tweetDate = sdf.parse(line.substring(line.lastIndexOf(TWEETDATE) + 10));
+                    tweet.setTweetDate(tweetDate);
+                }
+            }
+        }
+        br.close();
         return tweetList;
-
     }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Tweet create(@RequestBody Tweet tweet) {
-        Tweet newTweet = new Tweet();
-        newTweet.setUserId(tweet.getUserId());
-        newTweet.setId((long) tweetList.size() + 1);
-        newTweet.setTweetDate(new Date());
-        newTweet.setTweetbody(tweet.getTweetbody());
-        tweetList.add(newTweet);
-        return newTweet;
-    }
-
-
 }
