@@ -12,10 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/stats")
@@ -69,8 +66,8 @@ public class StatsController {
                     tweet.setTweetbody(line.substring(line.lastIndexOf(TWEETBODY) + 10));
                 else if(line.startsWith(TWEETDATE)){
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
-                    Date tweetDate = sdf.parse(line.substring(line.lastIndexOf(TWEETDATE) + 10));
-                    tweet.setTweetDate(tweetDate);
+                    String tweetDateStr = line.substring(line.lastIndexOf(TWEETDATE) + 10);
+                    tweet.setTweetDateStr(tweetDateStr);
                 }
             }
         }
@@ -81,8 +78,13 @@ public class StatsController {
         int tweetCountUpTo12AM = 0;
         int tweetCountUpTo12PM = 0;
         for(Tweet tw : tweetList){
+            if(tw.getTweetDateStr().endsWith("AM"))
+                tweetCountUpTo12AM++;
+            if(tw.getTweetDateStr().endsWith("PM"))
+                tweetCountUpTo12PM++;
         }
-
+        status.setTweetCountUpTo12AM(tweetCountUpTo12AM);
+        status.setTweetCountUpTo12PM(tweetCountUpTo12PM);
 
         return status;
     }
