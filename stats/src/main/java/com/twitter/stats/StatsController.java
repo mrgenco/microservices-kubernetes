@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,61 +19,30 @@ import java.util.*;
 @RequestMapping("/api/stats")
 public class StatsController {
 
-    @Value("${datasource.path}")
-    private String dataSourcePath;
-
-    // constant variables for streams data
-    private static final String STREAMS = "streams";
-    private static final String ID = "ID:";
-    private static final String USERID = "USERID:";
-    private static final String TWEETBODY = "TWEETBODY:";
-    private static final String TWEETDATE = "TWEETDATE:";
+    @Value("${service.stream}")
+    private String streamServiceUrl;
 
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findUserProfile(@PathVariable Long id)  {
+    public ResponseEntity<?> getStatsByUser(@PathVariable Long id)  {
         try{
             Status stats = findStatsByUserId(id);
-            if(stats != null)
-                return new ResponseEntity<>(stats, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(stats, HttpStatus.OK);
         }catch(Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private Status findStatsByUserId(Long userid) throws Exception {
-        List<Tweet> tweetList = new ArrayList<>();
-        File file = new File(dataSourcePath + STREAMS);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-        Tweet tweet = null;
-        Long currentUserId = null;
-        while ((line = br.readLine()) != null){
-            if(line.startsWith(USERID)){ // new tweet of given user found
-                tweet = new Tweet();
-                currentUserId = Long.parseLong(line.substring(line.lastIndexOf(ID) + 3));
-                if(currentUserId == userid){
-                    tweet.setUserId(currentUserId);
-                    tweetList.add(tweet);
-                }
-            }
-            if(userid.equals(currentUserId)){
-                if(line.startsWith(ID))
-                    tweet.setId(UUID.fromString(line.substring(line.lastIndexOf(ID) + 3)));
-                else if(line.startsWith(TWEETBODY))
-                    tweet.setTweetbody(line.substring(line.lastIndexOf(TWEETBODY) + 10));
-                else if(line.startsWith(TWEETDATE)){
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
-                    String tweetDateStr = line.substring(line.lastIndexOf(TWEETDATE) + 10);
-                    tweet.setTweetDateStr(tweetDateStr);
-                }
-            }
-        }
-        br.close();
 
+        List<Tweet> tweetList = new ArrayList<>();
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Tweet[]> tweetStreams =restTemplate.getForEntity(streamServiceUrl + userid, Tweet[].class);
+        if(tweetStreams!=null && tweetStreams.getBody() != null){
+            Tweet[] tweets = tweetStreams.getBody();
+            tweetList = Arrays.asList(tweets);
+        }
         Status status = new Status();
         status.setTotalTweetCount(tweetList.size());
         int tweetCountUpTo12AM = 0;

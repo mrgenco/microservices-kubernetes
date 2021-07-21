@@ -72,8 +72,8 @@ public class StreamService {
                     tweet.setTweetbody(line.substring(line.lastIndexOf(TWEETBODY) + 10));
                 else if(line.startsWith(TWEETDATE)){
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
-                    Date tweetDate = sdf.parse(line.substring(line.lastIndexOf(TWEETDATE) + 10));
-                    tweet.setTweetDate(tweetDate);
+                    String tweetDateStr = line.substring(line.lastIndexOf(TWEETDATE) + 10);
+                    tweet.setTweetDateStr(tweetDateStr);
                 }
             }
         }

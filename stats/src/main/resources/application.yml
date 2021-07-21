@@ -1,4 +1,4 @@
 server:
   port: 9003
-datasource:
-  path: "D:\\projects\\upwork\\Akshay Jadhav\\microservices-twitter\\db\\"
+service:
+  stream: "http://localhost:9002/api/stream/"
