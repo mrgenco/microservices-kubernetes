@@ -1,5 +1,7 @@
 package com.twitter.stream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,8 +10,18 @@ public class Tweet {
     private UUID id;
     private Long userId;
     private String tweetbody;
+    @JsonIgnore
     private Date tweetDate;
+    private String tweetDateStr;
 
+
+    public String getTweetDateStr() {
+        return tweetDateStr;
+    }
+
+    public void setTweetDateStr(String tweetDateStr) {
+        this.tweetDateStr = tweetDateStr;
+    }
 
     public UUID getId() {
         return id;

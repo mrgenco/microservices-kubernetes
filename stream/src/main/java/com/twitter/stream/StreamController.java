@@ -23,6 +23,28 @@ public class StreamController {
         this.service = streamService;
     }
 
+    /*
+    * returns the most recent tweets: the last 10 tweets
+    * */
+    @GetMapping("/recent")
+    public ResponseEntity<?> findMostRecentTweets() {
+        try{
+            List<Tweet> allTweets = service.findAllTweets();
+            if(!CollectionUtils.isEmpty(allTweets)){
+                if(allTweets.size() >= 10){
+                    List<Tweet> mostRecentTweets = allTweets.subList(allTweets.size() - 10, allTweets.size());
+                    return new ResponseEntity<>(mostRecentTweets, HttpStatus.OK);
+                }
+                else
+                    return new ResponseEntity<>(allTweets, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findAllByUserId(@PathVariable Long id) {
         try{

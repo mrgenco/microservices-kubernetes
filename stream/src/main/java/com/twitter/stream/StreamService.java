@@ -52,8 +52,7 @@ public class StreamService {
 
     List<Tweet> findAllByUserId(Long userid) throws Exception {
         List<Tweet> tweetList = new ArrayList<>();
-        File file = new File(dataSourcePath + STREAMS);
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br = getBufferedReaderForStreams();
         String line;
         Tweet tweet = null;
         Long currentUserId = null;
@@ -80,5 +79,35 @@ public class StreamService {
         }
         br.close();
         return tweetList;
+    }
+
+    List<Tweet> findAllTweets() throws Exception {
+        List<Tweet> tweetList = new ArrayList<>();
+        BufferedReader br = getBufferedReaderForStreams();
+        String line;
+        Tweet tweet = null;
+        while ((line = br.readLine()) != null){
+            if(line.startsWith(USERID)){
+                tweet = new Tweet();
+                tweet.setUserId(Long.parseLong(line.substring(line.lastIndexOf(ID) + 3)));
+                tweetList.add(tweet);
+            }
+            else if(line.startsWith(ID))
+                tweet.setId(UUID.fromString(line.substring(line.lastIndexOf(ID) + 3)));
+            else if(line.startsWith(TWEETBODY))
+                tweet.setTweetbody(line.substring(line.lastIndexOf(TWEETBODY) + 10));
+            else if(line.startsWith(TWEETDATE)){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss aa");
+                String tweetDateStr = line.substring(line.lastIndexOf(TWEETDATE) + 10);
+                tweet.setTweetDateStr(tweetDateStr);
+            }
+        }
+        br.close();
+        return tweetList;
+    }
+
+    private BufferedReader getBufferedReaderForStreams() throws FileNotFoundException {
+        File file = new File(dataSourcePath + STREAMS);
+        return new BufferedReader(new FileReader(file));
     }
 }

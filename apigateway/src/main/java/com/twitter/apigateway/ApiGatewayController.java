@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -39,11 +38,25 @@ public class ApiGatewayController {
         GlobalEntity globalEntity = new GlobalEntity();
         RestTemplate restTemplate = new RestTemplate();
         try{
-            UserProfile profile = restTemplate.getForObject(profileServiceUrl + id, UserProfile.class);
-            globalEntity.setProfile(profile);
+            getUserProfileInfo(id, globalEntity, restTemplate);
+            getStreamInfo(id, globalEntity, restTemplate);
+            getStatsInfo(id, globalEntity, restTemplate);
         }catch(Exception ex){
-            LOG.info("Error occured while retrieving profile data" + ex.getMessage());
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(globalEntity, HttpStatus.OK);
+    }
+
+    private void getStatsInfo(@PathVariable Long id, GlobalEntity globalEntity, RestTemplate restTemplate) {
+        try{
+            Status status = restTemplate.getForObject(statServiceUrl + id, Status.class);
+            globalEntity.setStatus(status);
+        }catch(Exception ex){
+            LOG.info("Error occured while retrieving status data" + ex.getMessage());
+        }
+    }
+
+    private void getStreamInfo(@PathVariable Long id, GlobalEntity globalEntity, RestTemplate restTemplate) {
         try{
             ResponseEntity<Tweet[]> tweetStreams =restTemplate.getForEntity(streamServiceUrl + id, Tweet[].class);
             if(tweetStreams!=null && tweetStreams.getBody() != null){
@@ -53,13 +66,15 @@ public class ApiGatewayController {
         }catch (Exception ex){
             LOG.info("Error occured while retrieving profile data" + ex.getMessage());
         }
+    }
+
+    private void getUserProfileInfo(@PathVariable Long id, GlobalEntity globalEntity, RestTemplate restTemplate) {
         try{
-            Status status = restTemplate.getForObject(statServiceUrl + id, Status.class);
-            globalEntity.setStatus(status);
+            UserProfile profile = restTemplate.getForObject(profileServiceUrl + id, UserProfile.class);
+            globalEntity.setProfile(profile);
         }catch(Exception ex){
-            LOG.info("Error occured while retrieving status data" + ex.getMessage());
+            LOG.info("Error occured while retrieving profile data" + ex.getMessage());
         }
-        return new ResponseEntity<>(globalEntity, HttpStatus.OK);
     }
 
     /*
@@ -96,6 +111,12 @@ public class ApiGatewayController {
     public ResponseEntity<?> findTweetStreamByUserId(@PathVariable Long userId)  {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForEntity(streamServiceUrl + userId, String.class);
+    }
+
+    @GetMapping("/streams/recent")
+    public ResponseEntity<?> findMostRecentTweets()  {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForEntity(streamServiceUrl + "recent", String.class);
     }
 
     @PostMapping("/streams")

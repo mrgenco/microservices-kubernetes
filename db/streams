@@ -43,3 +43,23 @@ ID:39c0322e-620c-4266-83cd-eac4a2448954
 TWEETBODY:Sample tweet from gateway
 TWEETDATE:21-07-2021 09:08:00 AM
 -----------------------------
+USERID:3
+ID:7cfb88e1-535d-4806-8ef1-49467a16b8e0
+TWEETBODY:Sample tweet 123
+TWEETDATE:21-07-2021 03:58:25 PM
+-----------------------------
+USERID:3
+ID:d9e9e774-01b4-409a-9631-751e7074a18d
+TWEETBODY:Sample tweet 124
+TWEETDATE:21-07-2021 03:58:27 PM
+-----------------------------
+USERID:3
+ID:5a0a0acd-254b-4931-b7e7-da6b85ef6afa
+TWEETBODY:Sample tweet 555
+TWEETDATE:21-07-2021 03:58:30 PM
+-----------------------------
+USERID:1
+ID:b843cd0d-1b0c-40c4-9d73-439644384d24
+TWEETBODY:Sample tweet 555
+TWEETDATE:21-07-2021 03:58:34 PM
+-----------------------------
