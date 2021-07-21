@@ -23,7 +23,7 @@ public class StreamController {
         this.service = streamService;
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> findAllByUserId(@PathVariable Long id) {
         try{
             List<Tweet> tweetList = service.findAllByUserId(id);

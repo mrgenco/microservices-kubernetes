@@ -42,7 +42,7 @@ public class ProfileController {
         }
     }
 
-    @PutMapping
+    @PostMapping("/update")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserProfile userProfile) {
         try{
             if(service.updateUser(userProfile))

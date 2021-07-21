@@ -23,3 +23,23 @@ ID:66d9f694-d633-4b1d-b4a1-12ad8cf4528c
 TWEETBODY:hhhhhh QWEE tweet 2
 TWEETDATE:19-07-2021 11:55:44 AM
 -----------------------------
+USERID:1
+ID:21c6926d-3bb7-4a11-9783-6fd7325a53e5
+TWEETBODY:Sample tweet 2
+TWEETDATE:21-07-2021 08:09:15 AM
+-----------------------------
+USERID:1
+ID:97d4bbc8-7fae-4a6a-b70d-79bbadad8c42
+TWEETBODY:Sample tweet from gateway
+TWEETDATE:21-07-2021 08:11:25 AM
+-----------------------------
+USERID:3
+ID:410c5786-2daa-430e-a6f7-c3530a413f57
+TWEETBODY:Sample tweet 1
+TWEETDATE:21-07-2021 09:05:24 AM
+-----------------------------
+USERID:3
+ID:39c0322e-620c-4266-83cd-eac4a2448954
+TWEETBODY:Sample tweet from gateway
+TWEETDATE:21-07-2021 09:08:00 AM
+-----------------------------
