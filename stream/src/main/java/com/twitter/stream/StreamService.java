@@ -37,6 +37,7 @@ public class StreamService {
         Date newDate = new Date();
         String tweetDate = sdf.format(newDate);
         tweet.setTweetDate(newDate);
+        tweet.setTweetDateStr(tweetDate);
         inputBuffer.append(TWEETDATE).append(tweetDate);
         inputBuffer.append('\n');
         inputBuffer.append("-----------------------------");

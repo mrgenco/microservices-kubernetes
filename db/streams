@@ -63,3 +63,18 @@ ID:b843cd0d-1b0c-40c4-9d73-439644384d24
 TWEETBODY:Sample tweet 555
 TWEETDATE:21-07-2021 03:58:34 PM
 -----------------------------
+USERID:2
+ID:948fdd08-2382-4f1b-b062-fbfd4d17615b
+TWEETBODY:another tweet for user id 2
+TWEETDATE:22-07-2021 07:38:58 AM
+-----------------------------
+USERID:2
+ID:a4dd9909-eda7-4095-9738-3037fe8ac027
+TWEETBODY:another asdasdasdasdtweet for user id 2
+TWEETDATE:22-07-2021 07:40:25 AM
+-----------------------------
+USERID:2
+ID:863a9387-b3b6-4e54-ab21-45385aa8893f
+TWEETBODY:another asdasdasdasdtweet for user id 2
+TWEETDATE:22-07-2021 07:55:03 AM
+-----------------------------

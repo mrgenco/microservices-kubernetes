@@ -24,6 +24,23 @@ public class StreamController {
     }
 
     /*
+     * returns the most recent tweets: the last 10 tweets
+     * */
+    @GetMapping("/all")
+    public ResponseEntity<?> findAllTweets() {
+        try{
+            List<Tweet> allTweets = service.findAllTweets();
+            if(!CollectionUtils.isEmpty(allTweets)){
+                return new ResponseEntity<>(allTweets, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*
     * returns the most recent tweets: the last 10 tweets
     * */
     @GetMapping("/recent")
@@ -52,7 +69,7 @@ public class StreamController {
             if(!CollectionUtils.isEmpty(tweetList))
                 return new ResponseEntity<>(tweetList, HttpStatus.OK);
             else
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch(Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

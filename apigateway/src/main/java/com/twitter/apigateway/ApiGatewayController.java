@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -45,6 +48,13 @@ public class ApiGatewayController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(globalEntity, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/streams/recent")
+    public ResponseEntity<?> findMostRecentTweets()  {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForEntity(statServiceUrl + "recent", String.class);
     }
 
     private void getStatsInfo(@PathVariable Long id, GlobalEntity globalEntity, RestTemplate restTemplate) {
@@ -109,14 +119,21 @@ public class ApiGatewayController {
 
     @GetMapping("/streams/{userId}")
     public ResponseEntity<?> findTweetStreamByUserId(@PathVariable Long userId)  {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(streamServiceUrl + userId, String.class);
-    }
-
-    @GetMapping("/streams/recent")
-    public ResponseEntity<?> findMostRecentTweets()  {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForEntity(streamServiceUrl + "recent", String.class);
+        try{
+            List<Tweet> tweetList = new ArrayList<>();
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Tweet[]> tweetStreams = restTemplate.getForEntity(streamServiceUrl + userId, Tweet[].class);
+            if (tweetStreams != null && tweetStreams.getBody() != null) {
+                Tweet[] tweets = tweetStreams.getBody();
+                tweetList = Arrays.asList(tweets);
+            }
+            if(!CollectionUtils.isEmpty(tweetList))
+                return new ResponseEntity<>(tweetList, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/streams")
