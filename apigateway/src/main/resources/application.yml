@@ -2,6 +2,6 @@ server:
   port: 9000
 
 service:
-  profile: "http://localhost:9001/api/profile/"
-  stream: "http://localhost:9002/api/stream/"
-  stats: "http://localhost:9003/api/stats/"
+  profile: "http://profile:9001/api/profile/"
+  stream: "http://stream:9002/api/stream/"
+  stats: "http://stats:9003/api/stats/"

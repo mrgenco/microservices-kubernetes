@@ -1,4 +1,4 @@
 server:
   port: 9003
 service:
-  stream: "http://localhost:9002/api/stream/"
+  stream: "http://stream:9002/api/stream/"

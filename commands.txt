@@ -1,0 +1,17 @@
+kubectl run profile-service --image=profile-service-image \ --port=8080 --image-pull-policy Never
+
+
+//mount project folder to minikube file system
+minikube mount D:\projects\upwork\Akshay Jadhav\microservices-twitter:/project
+
+
+todo : profile service son imajı pushla
+todo : container springboot env variables
+docker image build -t profile-service-image .
+docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project profile-service-image
+
+docker run --name=apigateway --rm --network=upwork -p 9000:9000 apigateway
+
+
+
+docker run --name=apigateway --rm --network=upwork -p 9000:9000 -e SERVICE_PROFILE:'http://profile:9001/api/profile/' apigateway
