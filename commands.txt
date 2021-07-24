@@ -8,9 +8,11 @@ minikube mount D:\projects\upwork\Akshay Jadhav\microservices-twitter:/project
 todo : profile service son imajı pushla
 todo : container springboot env variables
 docker image build -t profile-service-image .
-docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project profile-service-image
+docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project mrgenco/profile-service-image
+docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project mrgenco/stream-service-image
+docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project mrgenco/profile-service-image
 
-docker run --name=apigateway --rm --network=upwork -p 9000:9000 apigateway
+docker run --name=apigateway --rm --network=upwork -p 9000:9000 mrgenco/apigateway-image
 
 
 
