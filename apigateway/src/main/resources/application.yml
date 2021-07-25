@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 8080
 
 service:
   profile: "http://profile:9001/api/profile/"

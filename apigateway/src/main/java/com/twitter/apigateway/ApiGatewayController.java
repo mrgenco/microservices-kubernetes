@@ -30,6 +30,13 @@ public class ApiGatewayController {
     @Value("${service.stats}")
     private String statServiceUrl;
 
+
+    @GetMapping()
+    public ResponseEntity<?> serviceStatus()  {
+        return new ResponseEntity<>("Hello from apigateway!", HttpStatus.OK);
+    }
+
+
     /*
      *
      * Will return the profile, list of tweets and stats for the user as composite response
