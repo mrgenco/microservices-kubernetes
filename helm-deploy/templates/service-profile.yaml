@@ -1,0 +1,16 @@
+# ... Profile Service YAML definition
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: profile
+  name: profile
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.profile.port }}
+      nodePort: 30001
+      targetPort: {{ .Values.service.profile.port }}
+  selector:
+    app: profile
+  type: NodePort

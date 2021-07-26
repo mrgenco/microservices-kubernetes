@@ -1,0 +1,17 @@
+# ... APIGateway Service YAML definition
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apigateway
+  name: apigateway
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.gateway.port }}
+      nodePort: 30000
+      targetPort: {{ .Values.service.gateway.port }}
+  selector:
+    app: apigateway
+  type: NodePort
+

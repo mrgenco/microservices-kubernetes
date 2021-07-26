@@ -1,0 +1,16 @@
+# ... Stat Service YAML definition
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: stats
+  name: stats
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.stats.port }}
+      nodePort: 30003
+      targetPort: {{ .Values.service.stats.port }}
+  selector:
+    app: stats
+  type: NodePort

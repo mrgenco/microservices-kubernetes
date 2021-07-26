@@ -1,0 +1,24 @@
+# ... Stats Service Deployment YAML definition
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: stats
+  name: stats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stats
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: stats
+    spec:
+      containers:
+        - image: {{ .Values.image.stats.repository }}:{{ .Values.image.tag }}
+          name: stats
+          ports:
+            - containerPort: {{ .Values.service.stats.port }}

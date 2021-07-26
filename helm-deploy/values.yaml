@@ -1,0 +1,26 @@
+replicaCount: 1
+image:
+  gateway:
+    repository: "mrgenco/apigateway-image"
+  profile:
+    repository: "mrgenco/profile-service-image"
+  stream:
+    repository: "mrgenco/stream-service-image"
+  stats:
+    repository: "mrgenco/stats-service-image"
+  tag: "latest"
+service:
+  type: NodePort
+  gateway:
+    port: 9000
+  profile:
+    port: 9001
+  stream:
+    port: 9002
+  stats:
+    port: 9003
+volume:
+  mountPathContainer: /var/opt/project/
+  hostPath : /db
+
+

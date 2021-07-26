@@ -1,0 +1,17 @@
+
+# ... Stream Service YAML definition
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: stream
+  name: stream
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.stream.port }}
+      nodePort: 30002
+      targetPort: {{ .Values.service.stream.port }}
+  selector:
+    app: stream
+  type: NodePort
