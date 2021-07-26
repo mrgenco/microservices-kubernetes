@@ -1,0 +1,44 @@
+
+# HELM CHART
+===============================
+## for accessing profile and stream files from the kubernetes pods
+$ minikube mount D:\projects\upwork\db:/db
+
+## for running all the services using single helm chart
+$ helm install --generate-name .\helm-deploy\
+
+## for accessing the gateway app url
+$ minikube service apigateway --url
+
+# DOCKER Commands
+===============================
+$ docker image build -t mrgenco/apigateway-image:latest .
+$ docker image build -t mrgenco/profile-service-image:latest .
+$ docker image build -t mrgenco/stream-service-image:latest .
+$ docker image build -t mrgenco/stats-service-image:latest .
+
+
+$ docker run --name=apigateway --rm --network=upwork -p 9000:9000 mrgenco/apigateway-image
+$ docker run --name=profile --rm --network=upwork -p 9001:9001 -v D:\projects\upwork\db:/var/opt/project mrgenco/profile-service-image
+$ docker run --name=stream --rm --network=upwork -p 9002:9002 -v D:\projects\upwork\db:/var/opt/project mrgenco/stream-service-image
+$ docker run --name=stats --rm --network=upwork -p 9003:9003 mrgenco/stats-service-image
+
+
+# KUBERNETES Commands
+===============================
+
+$ minikube start
+
+## You can't mount your local directory into your Pod directly.
+## So first, you need to mount your directory {hostdir} into your minikube
+$ minikube mount D:\projects\upwork\db:/db
+
+## Run below kubectl command in the root directory to deploy all the services 
+## Or you can move this folder wherever you want but you must run it in the parent directory of kube folder
+$ kubectl apply -f kube
+
+## If you want to delete all the kubernetes resources(deployments, services and pods) 
+$ kubectl delete -f kube
+
+## for accessing the gateway app url
+$ minikube service apigateway --url 
